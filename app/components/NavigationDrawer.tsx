@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDrag } from 'react-dnd';
+import { DragPreviewImage, useDrag } from 'react-dnd';
 import { ItemTypes } from '../itemTypes';
 import Timer from './Elements/Timer';
 import Progress from './Elements/Progress';
@@ -7,7 +7,9 @@ import Question from './Elements/Question';
 import ImageInput from './Elements/Image';
 import OptionComponent from './Elements/Option';
 import ButtonComponent from './Elements/Button';
-import { FiMenu } from 'react-icons/fi'; // Import icon for the toggle
+import { FiMenu } from 'react-icons/fi';
+import Arrows from './Elements/Arrows';
+import Pagination from './Elements/Pagination';
 
 const items = [
   { id: 'progress-bar', label: 'Progress Bar', defaultColumns: 3, component: Progress },
@@ -16,33 +18,35 @@ const items = [
   { id: 'image', label: 'Image', defaultColumns: 3, component: ImageInput },
   { id: 'option', label: 'Option', defaultColumns: 3, component: OptionComponent },
   { id: 'button', label: 'Button', defaultColumns: 3, component: ButtonComponent },
+  { id: 'naviagation-arrows', label: 'Arrows', defaultColumns: 1, component: Arrows },
+  { id: 'pagination', label: 'Pagination', defaultColumns: 1, component: Pagination },
 ];
 
 export default function NavigationDrawer() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // Function to toggle drawer visibility
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
   return (
     <div className="relative">
-      {/* Mobile toggle icon */}
       <button
         onClick={toggleDrawer}
-        className="lg:hidden p-3 text-gray-600 bg-gray-200 rounded-full absolute top-4 left-4 z-10"
+        className="lg:hidden p-2 text-gray-600 bg-gray-200 rounded-full absolute top-2 left-4 z-10"
       >
-        <FiMenu size={24} />
+        <FiMenu size={20} />
       </button>
 
-      {/* Drawer */}
       <div
-        className={`${
-          isDrawerOpen ? 'block' : 'hidden'
-        } lg:block fixed lg:static left-0 top-0 w-64 h-full bg-gray-100 p-4 overflow-y-auto transition-all ease-in-out`}
+        className={`${isDrawerOpen ? 'block' : 'hidden'
+          } lg:block fixed lg:static left-0 top-0 w-64 h-full bg-gray-100 p-4 overflow-y-auto transition-all ease-in-out`}
         style={{ zIndex: 999 }}
       >
         {items.map((item) => (
-          <DraggableItem key={item.id} item={item} />
+          <DraggableItem
+            key={item.id}
+            item={item}
+            onDragStart={() => setIsDrawerOpen(false)}
+          />
         ))}
       </div>
     </div>
@@ -51,20 +55,45 @@ export default function NavigationDrawer() {
 
 function DraggableItem({
   item,
+  onDragStart,
 }: {
-  item: { id: string; label: string; defaultColumns: number; component: JSX.Element | React.FC<any> | (() => JSX.Element); };
+  item: {
+    id: string;
+    label: string;
+    defaultColumns: number;
+    component: JSX.Element | React.FC<any> | (() => JSX.Element);
+  };
+  onDragStart: () => void;
 }) {
-  const [, drag] = useDrag(() => ({
+  const [{ isDragging }, drag, preview] = useDrag({
     type: ItemTypes.BOX,
-    item: { id: item.id, label: item.label, defaultColumns: item.defaultColumns, component: item.component },
-  }));
+    item: () => {
+      onDragStart();
+      return {
+        id: item.id,
+        label: item.label,
+        defaultColumns: item.defaultColumns,
+        component: item.component,
+      };
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
 
   return (
-    <div
-      ref={drag}
-      className="bg-white p-3 mb-3 border border-gray-300 rounded-lg cursor-move"
-    >
-      {item.label}
-    </div>
+    <>
+      {/* Drag Preview */}
+      <DragPreviewImage connect={preview} src="your-preview-image.png" />
+
+      {/* Draggable Element */}
+      <div
+        ref={drag}
+        className={`p-3 mb-3 bg-white border rounded-lg cursor-move ${isDragging ? 'opacity-50' : 'opacity-100'
+          }`}
+      >
+        {item.label}
+      </div>
+    </>
   );
 }

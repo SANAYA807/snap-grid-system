@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { DroppableBox } from "./DroppableBox";
 import { useFetcher } from "@remix-run/react";
 import Modal from "./Modal";
-import { droppableConfig } from "~/components/gridConfig";
+import { droppableConfig } from "~/gridConfig";
+import { Item } from "~/interfaces";
 
 interface DroppedItem {
-  item: any;
+  item: Item;
   boxId: number;
 }
 
 interface FetcherResponse {
   message: string;
-  // add any other properties that your API might return
 }
 
 function FlexContainer() {
@@ -48,11 +48,10 @@ function FlexContainer() {
     }
   }, [fetcher.state, fetcher.data]);
 
-  console.log(droppableConfig);
-  
+
   return (
-    <div className="w-full my-auto flex flex-col items-center mx-auto m-2">
-      <div className="grid bg-white grid-cols-5 p-3 gap-1 grid-rows-15 h-[90vh] overflow-hidden w-96 m-2 rounded-lg">
+    <div className="w-full sm:my-auto flex flex-col items-center mx-auto mt-10 m-2">
+      <div className="grid bg-white grid-cols-5 p-3 gap-1 grid-rows-15 h-[90vh] overflow-hidden w-96 m-2 sm:rounded-lg">
         {droppableConfig.map(({ id, rowStart, colStart, colSpan }) => (
           <div
             key={id}
@@ -72,7 +71,7 @@ function FlexContainer() {
       <div className="flex gap-4 mt-4">
         <button
           className="bg-green-500 px-6 py-2 rounded-md"
-          onClick={handleSave} // Trigger save when clicked
+          onClick={handleSave}
         >
           Save Quiz
         </button>

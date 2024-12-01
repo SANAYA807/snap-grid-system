@@ -30,7 +30,7 @@ const ImageInput: React.FC<ImageInputProps> = ({ data, onChange }) => {
     <div className="flex flex-col items-center">
       {/* Display uploaded or provided image */}
       {image ? (
-        <div className="mt-4">
+        <div>
           <img src={image} alt="Uploaded Preview" className=" h-auto rounded-md" />
         </div>
       ) : (

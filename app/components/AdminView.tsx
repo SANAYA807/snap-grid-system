@@ -1,18 +1,19 @@
-import NavigationDrawer from './NavigationDrawer';
+import React from 'react';
 import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';;
+import { MultiBackend } from 'react-dnd-multi-backend';
+import NavigationDrawer from './NavigationDrawer';
 import FlexContainer from './Layout';
+import CustomPreview from './CustomPreview';
+import { HTML5toTouch } from 'rdndmb-html5-to-touch';
 
 export const AdminView = () => {
-  
-  
-    return (
-      <DndProvider backend={HTML5Backend}>
-        <div style={{ display: "flex" }}>
+  return (
+    <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+      <div style={{ display: 'flex' }}>
         <NavigationDrawer />
-        <FlexContainer/>
-        </div>        
-      </DndProvider>
-    );
-  };
-  
+        <FlexContainer />
+        <CustomPreview />
+      </div>
+    </DndProvider>
+  );
+};

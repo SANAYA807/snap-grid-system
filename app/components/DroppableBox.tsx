@@ -3,10 +3,9 @@ import { useDrop } from 'react-dnd';
 import { MdDeleteOutline } from 'react-icons/md';
 
 import { ItemTypes } from '~/itemTypes';
-import Modal from './Modal'; // Import the modal
+import Modal from './Modal';
 
 export interface DustbinProps {
-  greedy?: boolean;
   children?: ReactNode;
   onDrop?: (item: any, id: number) => void;
   id: number;
@@ -14,7 +13,7 @@ export interface DustbinProps {
   reset?: () => void; // Callback to reset the dropped state
 }
 
-export const DroppableBox: FC<DustbinProps> = ({ greedy, children, onDrop, id, colSpan, reset }) => {
+export const DroppableBox: FC<DustbinProps> = ({ children, onDrop, id, colSpan, reset }) => {
   const [hasDropped, setHasDropped] = useState(false);
   const [droppedItem, setDroppedItem] = useState<any>(null);
   const [mismatch, setMismatch] = useState(false); // New state to track mismatch
@@ -27,15 +26,15 @@ export const DroppableBox: FC<DustbinProps> = ({ greedy, children, onDrop, id, c
       canDrop(item: any) {
         // Check for mismatch before allowing drop
         const isMismatch = item?.defaultColumns > colSpan;
-        if(isMismatch)
-        setIsModalOpen(true); 
+        if (isMismatch)
+          setIsModalOpen(true);
 
-       
+
         return !isMismatch; // Prevent drop if there's a mismatch
       },
       drop(item: any, monitor) {
         const didDrop = monitor.didDrop();
-        if (didDrop && !greedy) {
+        if (didDrop) {
           return;
         }
 
@@ -52,7 +51,7 @@ export const DroppableBox: FC<DustbinProps> = ({ greedy, children, onDrop, id, c
         isOverCurrent: monitor.isOver({ shallow: true }),
       }),
     }),
-    [greedy, id, onDrop, colSpan] // Include colSpan in dependencies
+    [id, onDrop, colSpan] // Include colSpan in dependencies
   );
 
   const handleUserInputs = (data: any) => {
@@ -92,11 +91,10 @@ export const DroppableBox: FC<DustbinProps> = ({ greedy, children, onDrop, id, c
       style={{
         ...gridColumnStyle,
         ...zoomStyle,
-        ...mismatchStyle, // Apply mismatch style
+        ...mismatchStyle,
       }}
-      className={`relative w-full h-full rounded-md text-gray-500 text-center flex items-center justify-center border-2 border-dashed border-gray-300 transition-all duration-300 ease-in-out ${
-        isOverCurrent || isOver ? 'bg-green-800' : 'bg-gray-100'
-      }`}
+      className={`relative w-full h-full rounded-md text-gray-500 text-center flex items-center justify-center border-2 border-dashed border-gray-300 transition-all duration-300 ease-in-out ${isOverCurrent || isOver ? 'bg-green-800' : 'bg-gray-100'
+        }`}
     >
       {!hasDropped && 'Drop here'}
       <br />

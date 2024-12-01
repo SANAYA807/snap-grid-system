@@ -39,7 +39,7 @@ export let action: ActionFunction = async ({ request }) => {
 function Index() {
   return (
     <div className="App">
-  <Login/>
+      <Login />
     </div>
   );
 }

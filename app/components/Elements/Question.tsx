@@ -56,7 +56,7 @@ const Question: React.FC<QuestionProps> = ({ data ,onChange }) => {
           <p>Q: {question}</p>
         </div>
       )}
-      {data && <div className="text-lg">
+      {data && <div className="text-lg ">
           <p>Q: {data}</p>
         </div>}
     </div>

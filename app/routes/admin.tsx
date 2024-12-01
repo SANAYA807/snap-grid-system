@@ -1,11 +1,11 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { AdminView } from "~/components/AdminView";
 
-import {  ActionFunction } from "@remix-run/node";
+import { ActionFunction } from "@remix-run/node";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
-  
+
   for (let [key, value] of formData.entries()) {
     console.log(`${key}: ${value}`);
   }
@@ -24,7 +24,7 @@ export const action: ActionFunction = async ({ request }) => {
 function Index() {
   return (
     <div className="App">
-        <AdminView />      
+      <AdminView />
     </div>
   );
 }
